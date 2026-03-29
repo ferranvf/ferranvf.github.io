@@ -3,22 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ferran Vera Filella — Data Engineer | AI & Machine Learning</title>
+<title>Ferran Vera Filella — ML Infra & Deep Learning Engineering</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:      #0d1117;
-    --bg2:     #111822;
+    --bg: #0d1117;
+    --bg2: #111822;
     --surface: #161f2e;
-    --border:  #1e2d42;
-    --accent:  #00c9a7;
+    --border: #1e2d42;
+    --accent: #00c9a7;
     --accent2: #0ea5e9;
-    --amber:   #f59e0b;
-    --text:    #e2eaf6;
-    --muted:   #6b8099;
-    --muted2:  #3d5470;
-    --white:   #f0f6ff;
+    --amber: #f59e0b;
+    --red: #f43f5e;
+    --text: #e2eaf6;
+    --muted: #6b8099;
+    --muted2: #3d5470;
+    --white: #f0f6ff;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,15 +37,15 @@
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; justify-content: space-between; align-items: center;
     padding: 1.2rem 3rem;
-    background: rgba(13,17,23,0.9);
+    background: rgba(13,17,23,0.88);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
   }
   .nav-logo {
     font-family: 'DM Mono', monospace;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     color: var(--accent);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
   }
   .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
   .nav-links a {
@@ -52,7 +53,7 @@
     font-size: 0.75rem;
     color: var(--muted);
     text-decoration: none;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     transition: color 0.2s;
   }
   .nav-links a:hover { color: var(--white); }
@@ -61,28 +62,39 @@
     color: #021a15 !important;
     padding: 0.45rem 1rem;
     border-radius: 4px;
-    font-weight: 600 !important;
+    font-weight: 500 !important;
   }
-  .nav-cta:hover { opacity: 0.88; }
+  .nav-cta:hover { background: #00e5bc !important; }
 
   /* ── HERO ── */
   .hero {
     min-height: 100vh;
     display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-columns: 1.1fr 0.9fr;
     padding-top: 64px;
     position: relative;
     overflow: hidden;
   }
-  .hero-grid {
-    position: absolute; inset: 0;
+  .hero-noise {
+    position: absolute; inset: 0; z-index: 0;
     background-image:
       linear-gradient(var(--border) 1px, transparent 1px),
       linear-gradient(90deg, var(--border) 1px, transparent 1px);
     background-size: 52px 52px;
-    opacity: 0.22;
-    mask-image: radial-gradient(ellipse 60% 80% at 75% 50%, black 10%, transparent 100%);
+    opacity: 0.25;
+    mask-image: radial-gradient(ellipse 65% 80% at 70% 50%, black 20%, transparent 100%);
   }
+  /* Glowing orb */
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    right: -100px; top: 50%;
+    transform: translateY(-50%);
+    background: radial-gradient(circle, rgba(0,201,167,0.07) 0%, rgba(14,165,233,0.04) 40%, transparent 70%);
+    pointer-events: none;
+  }
+
   .hero-left {
     display: flex; flex-direction: column; justify-content: center;
     padding: 6rem 3rem 6rem 5rem;
@@ -90,340 +102,658 @@
   }
   .hero-eyebrow {
     display: flex; align-items: center; gap: 0.8rem;
-    margin-bottom: 1.6rem;
+    margin-bottom: 1.8rem;
   }
-  .hero-eyebrow-line { width: 28px; height: 1px; background: var(--accent); }
+  .hero-eyebrow-line { width: 32px; height: 1px; background: var(--accent); }
   .hero-eyebrow-text {
     font-family: 'DM Mono', monospace;
     font-size: 0.7rem;
     color: var(--accent);
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
   }
+
   h1 {
     font-family: 'DM Serif Display', serif;
-    font-size: clamp(3rem, 5vw, 4.8rem);
-    line-height: 1.07;
+    font-size: clamp(3.2rem, 5.5vw, 5.2rem);
+    line-height: 1.06;
     color: var(--white);
-    margin-bottom: 1.6rem;
+    margin-bottom: 1.8rem;
     letter-spacing: -0.02em;
   }
   h1 em { font-style: italic; color: var(--accent); }
 
   .hero-desc {
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: var(--muted);
-    max-width: 480px;
-    margin-bottom: 2.4rem;
+    max-width: 500px;
+    margin-bottom: 2.5rem;
     line-height: 1.8;
   }
   .hero-desc strong { color: var(--text); font-weight: 600; }
 
-  .hero-ctas { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 2.8rem; }
+  .hero-ctas { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 3rem; }
   .btn {
     display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
+    padding: 0.8rem 1.6rem;
     border-radius: 4px;
     font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.04em;
+    font-size: 0.76rem;
+    letter-spacing: 0.05em;
     text-decoration: none;
     transition: all 0.2s;
-    border: none; cursor: pointer;
+    cursor: pointer; border: none;
   }
-  .btn-primary { background: var(--accent); color: #021a15; font-weight: 600; }
-  .btn-primary:hover { background: #00e5bc; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,201,167,0.22); }
+  .btn-primary { background: var(--accent); color: #021a15; font-weight: 500; }
+  .btn-primary:hover { background: #00e5bc; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,201,167,0.25); }
   .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--muted); }
   .btn-ghost:hover { border-color: var(--muted); color: var(--text); }
 
   .hero-stack {
-    display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
   }
   .hero-stack-label {
     font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
+    font-size: 0.65rem;
     color: var(--muted2);
     letter-spacing: 0.08em;
+    margin-right: 0.2rem;
   }
   .stack-chip {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 3px;
-    padding: 0.18rem 0.5rem;
+    padding: 0.2rem 0.55rem;
     font-family: 'DM Mono', monospace;
     font-size: 0.62rem;
     color: var(--muted);
+    letter-spacing: 0.04em;
   }
 
-  /* Hero right — metric cards */
+  /* Hero right */
   .hero-right {
     display: flex; flex-direction: column; justify-content: center;
-    padding: 5rem 4rem 5rem 1rem;
+    padding: 5rem 5rem 5rem 1rem;
     position: relative; z-index: 2;
-    gap: 1.1rem;
+    gap: 1.2rem;
   }
+
   .metric-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 1.4rem 1.7rem;
+    padding: 1.5rem 1.8rem;
     position: relative; overflow: hidden;
     transition: border-color 0.25s, transform 0.25s;
     animation: slideIn 0.5s ease both;
   }
-  .metric-card:hover { border-color: var(--accent); transform: translateX(-3px); }
-  .metric-card::after {
+  .metric-card:hover { border-color: var(--accent); transform: translateX(-4px); }
+  .metric-card::before {
     content: '';
     position: absolute; top: 0; right: 0;
     width: 2px; height: 100%;
     background: var(--accent);
   }
-  .metric-card:nth-child(2)::after { background: var(--accent2); }
-  .metric-card:nth-child(3)::after { background: var(--amber); }
-  .metric-card:nth-child(1) { animation-delay: 0.1s; }
-  .metric-card:nth-child(2) { animation-delay: 0.25s; }
-  .metric-card:nth-child(3) { animation-delay: 0.4s; }
+  .metric-card:nth-child(2)::before { background: var(--accent2); }
+  .metric-card:nth-child(3)::before { background: var(--amber); }
+  .metric-card:nth-child(1) { animation-delay: 0.15s; }
+  .metric-card:nth-child(2) { animation-delay: 0.3s; }
+  .metric-card:nth-child(3) { animation-delay: 0.45s; }
+
   @keyframes slideIn {
-    from { opacity: 0; transform: translateX(24px); }
-    to   { opacity: 1; transform: translateX(0); }
+    from { opacity: 0; transform: translateX(28px); }
+    to { opacity: 1; transform: translateX(0); }
   }
-  .metric-top {
-    display: flex; justify-content: space-between; align-items: flex-start;
-    margin-bottom: 0.25rem;
-  }
+
+  .metric-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.3rem; }
   .metric-label {
     font-family: 'DM Mono', monospace;
-    font-size: 0.6rem; color: var(--muted);
-    letter-spacing: 0.1em; text-transform: uppercase;
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
   .metric-tag {
     font-family: 'DM Mono', monospace;
-    font-size: 0.57rem; color: var(--muted2);
-    border: 1px solid var(--border); border-radius: 2px;
-    padding: 0.08rem 0.3rem;
+    font-size: 0.58rem;
+    color: var(--muted2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.1rem 0.35rem;
+    letter-spacing: 0.05em;
   }
   .metric-value {
     font-family: 'DM Serif Display', serif;
-    font-size: 2.3rem; color: var(--white);
-    line-height: 1; margin-bottom: 0.25rem;
+    font-size: 2.4rem;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 0.3rem;
   }
-  .metric-desc { font-size: 0.76rem; color: var(--muted); line-height: 1.5; }
+  .metric-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
 
-  /* ── SHARED SECTION STYLES ── */
-  section { padding: 6rem 5rem; }
+  /* ── SECTIONS ── */
+  section { padding: 7rem 5rem; }
   .section-eyebrow {
     display: flex; align-items: center; gap: 0.6rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
   }
-  .section-eyebrow::before { content: '//'; font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted2); }
   .section-eyebrow span {
     font-family: 'DM Mono', monospace;
-    font-size: 0.65rem; color: var(--accent);
-    letter-spacing: 0.12em; text-transform: uppercase;
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
+  .section-eyebrow::before { content: '//'; font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted2); }
   h2 {
     font-family: 'DM Serif Display', serif;
-    font-size: clamp(1.9rem, 3vw, 2.7rem);
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
     color: var(--white);
     letter-spacing: -0.02em;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
   }
 
   /* ── EXPERIENCE ── */
   #experience { background: var(--bg); }
 
-  .timeline { display: flex; flex-direction: column; }
-  .tl-item {
+  .exp-grid { display: flex; flex-direction: column; gap: 0; }
+  .exp-item {
     display: grid;
-    grid-template-columns: 190px 2px 1fr;
+    grid-template-columns: 200px 2px 1fr;
     gap: 0 2.5rem;
   }
-  .tl-meta {
-    padding: 2.2rem 0;
+
+  .exp-meta {
+    padding: 2.5rem 0;
     text-align: right;
   }
-  .tl-company {
+  .exp-company {
     font-family: 'DM Mono', monospace;
-    font-size: 0.68rem; color: var(--accent);
-    letter-spacing: 0.08em; text-transform: uppercase;
-    margin-bottom: 0.25rem;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
   }
-  .tl-period {
+  .exp-period {
     font-family: 'DM Mono', monospace;
-    font-size: 0.63rem; color: var(--muted);
+    font-size: 0.65rem;
+    color: var(--muted);
     line-height: 1.6;
   }
-  .tl-loc { font-size: 0.68rem; color: var(--muted2); margin-top: 0.2rem; }
+  .exp-loc { font-size: 0.7rem; color: var(--muted2); margin-top: 0.2rem; }
 
-  .tl-spine { display: flex; flex-direction: column; align-items: center; }
-  .tl-dot {
-    width: 11px; height: 11px; border-radius: 50%;
+  .exp-timeline {
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .exp-dot {
+    width: 12px; height: 12px; border-radius: 50%;
     background: var(--accent);
     border: 2px solid var(--bg);
-    box-shadow: 0 0 0 3px rgba(0,201,167,0.15);
-    margin-top: 2.6rem; flex-shrink: 0; position: relative; z-index: 1;
+    box-shadow: 0 0 0 3px rgba(0,201,167,0.18);
+    margin-top: 2.8rem;
+    flex-shrink: 0;
+    position: relative; z-index: 1;
   }
-  .tl-item:nth-child(2) .tl-dot { background: var(--accent2); box-shadow: 0 0 0 3px rgba(14,165,233,0.15); }
-  .tl-item:nth-child(3) .tl-dot { background: var(--amber);  box-shadow: 0 0 0 3px rgba(245,158,11,0.15); }
-  .tl-item:nth-child(4) .tl-dot { background: #f43f5e;       box-shadow: 0 0 0 3px rgba(244,63,94,0.15); }
-  .tl-line {
+  .exp-item:nth-child(2) .exp-dot { background: var(--accent2); box-shadow: 0 0 0 3px rgba(14,165,233,0.18); }
+  .exp-item:nth-child(3) .exp-dot { background: var(--amber); box-shadow: 0 0 0 3px rgba(245,158,11,0.18); }
+  .exp-item:nth-child(4) .exp-dot { background: var(--red); box-shadow: 0 0 0 3px rgba(244,63,94,0.18); }
+  .exp-line {
     width: 2px; flex: 1;
     background: linear-gradient(to bottom, var(--border), transparent);
-    min-height: 1.5rem;
+    min-height: 2rem;
   }
-  .tl-item:last-child .tl-line { display: none; }
+  .exp-item:last-child .exp-line { display: none; }
 
-  .tl-body { padding: 2rem 0 2.5rem; }
-  .tl-role {
+  .exp-body { padding: 2.2rem 0 2.5rem; }
+  .exp-role {
     font-family: 'DM Serif Display', serif;
-    font-size: 1.4rem; color: var(--white);
-    margin-bottom: 0.15rem;
+    font-size: 1.5rem;
+    color: var(--white);
+    margin-bottom: 0.2rem;
   }
-  .tl-type {
+  .exp-type {
     font-family: 'DM Mono', monospace;
-    font-size: 0.63rem; color: var(--muted2);
-    letter-spacing: 0.05em; margin-bottom: 1.1rem;
+    font-size: 0.65rem;
+    color: var(--muted2);
+    letter-spacing: 0.06em;
+    margin-bottom: 1.2rem;
   }
-  .tl-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
-  .tl-bullets li {
-    font-size: 0.88rem; color: var(--muted);
-    padding-left: 1.3rem; position: relative; line-height: 1.7;
+  .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .exp-bullets li {
+    font-size: 0.9rem;
+    color: var(--muted);
+    padding-left: 1.4rem;
+    position: relative;
+    line-height: 1.7;
   }
-  .tl-bullets li::before {
+  .exp-bullets li::before {
     content: '→';
     position: absolute; left: 0;
     color: var(--accent2);
     font-family: 'DM Mono', monospace;
-    font-size: 0.7rem; top: 0.15rem;
+    font-size: 0.72rem;
+    top: 0.15rem;
   }
-  .tl-bullets strong { color: var(--text); font-weight: 600; }
-  .tl-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.9rem; }
-  .tl-tag {
+  .exp-bullets strong { color: var(--text); font-weight: 600; }
+
+  .exp-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+  .exp-tag {
     background: rgba(14,165,233,0.06);
-    border: 1px solid rgba(14,165,233,0.14);
+    border: 1px solid rgba(14,165,233,0.15);
+    border-radius: 3px;
+    padding: 0.2rem 0.55rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--accent2);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── FOCUS AREAS (new section) ── */
+  #focus { background: var(--bg2); }
+  .focus-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .focus-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s;
+  }
+  .focus-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .focus-card-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3.5rem;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 1rem;
+    transition: color 0.25s;
+  }
+  .focus-card:hover .focus-card-num { color: rgba(0,201,167,0.12); }
+  .focus-card-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .focus-card-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.75;
+    margin-bottom: 1.2rem;
+  }
+  .focus-techs { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .focus-tech {
+    background: var(--bg);
+    border: 1px solid var(--border);
     border-radius: 3px;
     padding: 0.18rem 0.5rem;
     font-family: 'DM Mono', monospace;
-    font-size: 0.58rem; color: var(--accent2);
-    letter-spacing: 0.04em;
+    font-size: 0.6rem;
+    color: var(--muted);
   }
 
   /* ── SKILLS ── */
-  #skills { background: var(--bg2); }
-  .skills-grid {
+  #skills { background: var(--bg); }
+  .skills-wrap {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.4rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
   }
-  .skill-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1.6rem 1.8rem;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .skill-card:hover { border-color: var(--accent2); transform: translateY(-2px); }
-  .skill-card-title {
+  .skill-category { }
+  .skill-cat-label {
     font-family: 'DM Mono', monospace;
-    font-size: 0.65rem; color: var(--accent);
-    letter-spacing: 0.1em; text-transform: uppercase;
-    margin-bottom: 0.9rem;
-    padding-bottom: 0.6rem;
+    font-size: 0.65rem;
+    color: var(--muted2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--border);
   }
-  .skill-list {
-    font-size: 0.84rem; color: var(--muted);
-    line-height: 1.85;
+  .skill-rows { display: flex; flex-direction: column; gap: 0.6rem; }
+  .skill-row {
+    display: flex; align-items: center; gap: 1rem;
   }
-  .skill-list span {
+  .skill-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
     color: var(--text);
-    font-weight: 500;
+    min-width: 140px;
+    letter-spacing: 0.02em;
+  }
+  .skill-bar {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .skill-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform-origin: left;
+    animation: barGrow 1s ease both;
+  }
+  @keyframes barGrow {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+  .skill-level {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted2);
+    min-width: 32px;
+    text-align: right;
   }
 
   /* ── EDUCATION ── */
-  #education { background: var(--bg); }
-  .edu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+  #education { background: var(--bg2); }
+  .edu-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
   .edu-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 1.8rem 2rem;
-    position: relative; overflow: hidden;
+    padding: 2rem;
     transition: border-color 0.2s;
+    position: relative; overflow: hidden;
   }
+  .edu-card:hover { border-color: var(--accent2); }
   .edu-card::before {
     content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
   }
-  .edu-card:hover { border-color: var(--accent); }
   .edu-degree {
     font-family: 'DM Serif Display', serif;
-    font-size: 1.1rem; color: var(--white);
-    margin-bottom: 0.4rem; line-height: 1.3;
+    font-size: 1.1rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
   }
-  .edu-school { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.25rem; }
+  .edu-school { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.3rem; }
   .edu-year {
     font-family: 'DM Mono', monospace;
-    font-size: 0.62rem; color: var(--muted2); margin-bottom: 0.9rem;
+    font-size: 0.65rem;
+    color: var(--muted2);
+    margin-bottom: 1rem;
   }
   .edu-gpa {
-    display: inline-flex; align-items: center; gap: 0.35rem;
+    display: inline-flex; align-items: center; gap: 0.4rem;
     background: rgba(0,201,167,0.06);
     border: 1px solid rgba(0,201,167,0.18);
     border-radius: 3px;
-    padding: 0.2rem 0.6rem;
+    padding: 0.22rem 0.65rem;
     font-family: 'DM Mono', monospace;
-    font-size: 0.63rem; color: var(--accent);
+    font-size: 0.65rem;
+    color: var(--accent);
   }
 
   /* ── FOOTER ── */
   footer {
-    background: var(--bg2);
+    background: var(--bg);
     border-top: 1px solid var(--border);
-    padding: 3.5rem 5rem;
+    padding: 4rem 5rem;
     display: flex; justify-content: space-between; align-items: center;
     flex-wrap: wrap; gap: 2rem;
   }
   .footer-name {
     font-family: 'DM Serif Display', serif;
-    font-size: 1.5rem; color: var(--white); margin-bottom: 0.25rem;
+    font-size: 1.6rem;
+    color: var(--white);
+    margin-bottom: 0.3rem;
   }
   .footer-tagline {
     font-family: 'DM Mono', monospace;
-    font-size: 0.65rem; color: var(--muted); letter-spacing: 0.06em;
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
   }
-  .footer-links { display: flex; flex-direction: column; gap: 0.55rem; }
+  .footer-links { display: flex; flex-direction: column; gap: 0.6rem; }
   .footer-link {
-    display: flex; align-items: center; gap: 0.55rem;
+    display: flex; align-items: center; gap: 0.6rem;
     font-family: 'DM Mono', monospace;
-    font-size: 0.73rem; color: var(--muted);
-    text-decoration: none; transition: color 0.2s;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
   }
   .footer-link:hover { color: var(--accent); }
   .footer-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-  .footer-aside { display: flex; flex-direction: column; gap: 0.45rem; align-items: flex-end; }
+  .footer-aside {
+    display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end;
+  }
   .aside-item {
     font-family: 'DM Mono', monospace;
-    font-size: 0.63rem; color: var(--muted2);
-    display: flex; align-items: center; gap: 0.45rem;
+    font-size: 0.65rem;
+    color: var(--muted2);
+    display: flex; align-items: center; gap: 0.5rem;
   }
   .aside-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
 
+  /* ── PROJECTS ── */
+  #projects { background: var(--bg); }
+  .projects-grid { display: flex; flex-direction: column; gap: 2.5rem; }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2.2rem 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem 3rem;
+    align-items: start;
+    transition: border-color 0.25s, transform 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .project-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .project-card:hover::before { opacity: 1; }
+
+  .project-left {}
+  .project-category {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .project-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.01em;
+  }
+  .project-subtitle {
+    font-size: 0.83rem;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+    font-style: italic;
+  }
+  .project-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .project-bullets li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    padding-left: 1.3rem;
+    position: relative;
+    line-height: 1.7;
+  }
+  .project-bullets li::before {
+    content: '→';
+    position: absolute; left: 0;
+    color: var(--accent2);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    top: 0.15rem;
+  }
+  .project-bullets strong { color: var(--text); font-weight: 600; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.1rem; }
+  .project-tag {
+    background: rgba(0,201,167,0.06);
+    border: 1px solid rgba(0,201,167,0.15);
+    border-radius: 3px;
+    padding: 0.2rem 0.55rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--accent);
+  }
+  .project-right {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 0.8rem;
+    min-width: 160px;
+  }
+  .project-status {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+  }
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  .project-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.4rem 0.8rem;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .project-link:hover { border-color: var(--accent); color: var(--accent); }
+  .project-metric {
+    text-align: right;
+  }
+  .project-metric-val {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    color: var(--white);
+    line-height: 1;
+  }
+  .project-metric-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--muted2);
+    letter-spacing: 0.06em;
+    margin-top: 0.1rem;
+  }
+
+
+  /* ── PROJECTS ── */
+  #projects { background: var(--bg2); }
+  .proj-grid { display: flex; flex-direction: column; gap: 2rem; }
+  .proj-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2.2rem 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 1.5rem 3rem;
+    align-items: start;
+    transition: border-color 0.25s, transform 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .proj-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), transparent);
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .proj-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .proj-card:hover::before { opacity: 1; }
+  .proj-category {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem; color: var(--accent);
+    letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .proj-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.45rem; color: var(--white);
+    margin-bottom: 0.3rem; letter-spacing: -0.01em;
+  }
+  .proj-subtitle { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.1rem; font-style: italic; }
+  .proj-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .proj-bullets li {
+    font-size: 0.87rem; color: var(--muted);
+    padding-left: 1.3rem; position: relative; line-height: 1.7;
+  }
+  .proj-bullets li::before {
+    content: '→'; position: absolute; left: 0;
+    color: var(--accent2); font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; top: 0.15rem;
+  }
+  .proj-bullets strong { color: var(--text); font-weight: 600; }
+  .proj-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.9rem; }
+  .proj-tag {
+    background: rgba(0,201,167,0.06);
+    border: 1px solid rgba(0,201,167,0.15);
+    border-radius: 3px; padding: 0.18rem 0.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem; color: var(--accent); letter-spacing: 0.04em;
+  }
+  .proj-right { display: flex; flex-direction: column; align-items: flex-end; gap: 1rem; }
+  .proj-metric { text-align: right; }
+  .proj-metric-val {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem; color: var(--white); line-height: 1;
+  }
+  .proj-metric-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.57rem; color: var(--muted2);
+    letter-spacing: 0.06em; margin-top: 0.15rem;
+  }
+  .proj-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: 'DM Mono', monospace; font-size: 0.68rem;
+    color: var(--muted); text-decoration: none;
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 0.4rem 0.8rem; transition: border-color 0.2s, color 0.2s;
+  }
+  .proj-link:hover { border-color: var(--accent); color: var(--accent); }
+
   /* ── REVEAL ── */
-  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
   .reveal.visible { opacity: 1; transform: none; }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 960px) {
     nav { padding: 1rem 1.5rem; }
     .hero { grid-template-columns: 1fr; }
     .hero-left { padding: 5rem 2rem 2rem; }
-    .hero-right { padding: 0 2rem 4rem; }
+    .hero-right { padding: 1rem 2rem 4rem; }
     section { padding: 4rem 2rem; }
-    .skills-grid, .edu-grid { grid-template-columns: 1fr; }
-    .tl-item { grid-template-columns: 80px 2px 1fr; gap: 0 1.2rem; }
-    .tl-meta { text-align: left; }
+    .focus-grid, .edu-row { grid-template-columns: 1fr; }
+    .skills-wrap { grid-template-columns: 1fr; }
+    .exp-item { grid-template-columns: 80px 2px 1fr; gap: 0 1.2rem; }
+    .exp-meta { text-align: left; }
     footer { padding: 3rem 2rem; flex-direction: column; align-items: flex-start; }
     .footer-aside { align-items: flex-start; }
   }
@@ -433,9 +763,11 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">Ferran Vera Filella</div>
+  <div class="nav-logo">FVF // ML + Data Engineering</div>
   <ul class="nav-links">
     <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#focus">Focus Areas</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#education">Education</a></li>
     <li><a href="mailto:ferran.vera.filella@gmail.com" class="nav-cta">Contact</a></li>
@@ -444,18 +776,18 @@
 
 <!-- HERO -->
 <section class="hero" id="about">
-  <div class="hero-grid"></div>
+  <div class="hero-noise"></div>
 
   <div class="hero-left">
     <div class="hero-eyebrow">
       <div class="hero-eyebrow-line"></div>
-      <div class="hero-eyebrow-text">Data Engineer · AI & Machine Learning</div>
+      <div class="hero-eyebrow-text">Data Engineer  ·  AI & Machine Learning</div>
     </div>
 
-    <h1>Ferran<br>Vera <em>Filella</em></h1>
+    <h1>Where <em>deep learning</em><br>meets production<br>infrastructure.</h1>
 
     <p class="hero-desc">
-      Data Engineer at <strong>Amazon</strong> building production-grade AWS data platforms and pipelines at petabyte scale. Background in <strong>ML modeling</strong> from Accenture and two master's degrees in AI and Data Science — aiming to move deeper into machine learning engineering and applied AI.
+      I build the systems that make ML work at scale — from <strong>data lakehouse architectures</strong> and real-time pipelines to <strong>deep learning model infrastructure</strong> and MLOps platforms. Currently at Amazon, previously designing production ML systems for Fortune 500 clients.
     </p>
 
     <div class="hero-ctas">
@@ -464,15 +796,15 @@
     </div>
 
     <div class="hero-stack">
-      <span class="hero-stack-label">STACK //</span>
-      <span class="stack-chip">Python</span>
+      <span class="hero-stack-label">CORE STACK //</span>
+      <span class="stack-chip">PyTorch</span>
       <span class="stack-chip">PySpark</span>
-      <span class="stack-chip">AWS</span>
+      <span class="stack-chip">AWS EMR</span>
       <span class="stack-chip">Apache Iceberg</span>
       <span class="stack-chip">Airflow</span>
       <span class="stack-chip">Snowflake</span>
-      <span class="stack-chip">PyTorch</span>
-      <span class="stack-chip">XGBoost</span>
+      <span class="stack-chip">FinRL</span>
+      <span class="stack-chip">Transformers</span>
     </div>
   </div>
 
@@ -483,131 +815,236 @@
         <div class="metric-tag">Amazon Finance</div>
       </div>
       <div class="metric-value">90%+</div>
-      <div class="metric-desc">Batch jobs re-architected from days to hours using EMR Serverless & PySpark</div>
+      <div class="metric-desc">Batch processing re-architected from days to hours using EMR Serverless + PySpark</div>
     </div>
     <div class="metric-card">
       <div class="metric-top">
-        <div class="metric-label">Storage Cost Reduction</div>
+        <div class="metric-label">Infrastructure Cost Savings</div>
         <div class="metric-tag">Mapfre / AWS</div>
       </div>
       <div class="metric-value">70%</div>
-      <div class="metric-desc">Long-term storage costs cut via S3 Glacier intelligent tiering strategy</div>
+      <div class="metric-desc">Long-term storage costs slashed via S3 Glacier intelligent tiering strategy</div>
     </div>
     <div class="metric-card">
       <div class="metric-top">
         <div class="metric-label">Incident Response Time</div>
-        <div class="metric-tag">Amazon Internship</div>
+        <div class="metric-tag">Amazon Data Quality</div>
       </div>
       <div class="metric-value">60%</div>
-      <div class="metric-desc">Reduction via automated anomaly detection system on Redshift & PySpark</div>
+      <div class="metric-desc">Automated anomaly detection system integrating statistical models with Redshift</div>
     </div>
   </div>
 </section>
 
 <!-- EXPERIENCE -->
 <section id="experience">
-  <div class="section-eyebrow"><span>Professional History</span></div>
+  <div class="section-eyebrow"><span>Career History</span></div>
   <h2>Experience</h2>
 
-  <div class="timeline reveal">
+  <div class="exp-grid reveal">
 
-    <div class="tl-item">
-      <div class="tl-meta">
-        <div class="tl-company">Amazon</div>
-        <div class="tl-period">Aug 2024<br>Present</div>
-        <div class="tl-loc">Seattle, WA</div>
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-company">Amazon</div>
+        <div class="exp-period">Aug 2024<br>Present</div>
+        <div class="exp-loc">Seattle, WA</div>
       </div>
-      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
-      <div class="tl-body">
-        <div class="tl-role">Data Engineer</div>
-        <div class="tl-type">AWS FinTech · Full-time</div>
-        <ul class="tl-bullets">
-          <li>Architected a greenfield <strong>AWS-native finance platform</strong> used as the primary strategic decision-making tool for Amazon Finance Leadership, processing petabyte-scale financial datasets.</li>
-          <li>Designed a <strong>dynamic Apache Airflow framework</strong> with JSON-driven DAG generation, reducing pipeline development time ~40% across the team.</li>
-          <li>Led migration of <strong>20+ financial processes</strong> from legacy TM1 to AWS with parallel validation ensuring zero data loss across 5+ years of historical records.</li>
-          <li>Re-architected batch processing with AWS Glue + EMR Serverless, achieving a <strong>90%+ reduction in pipeline latency</strong> (days → hours).</li>
-          <li>Engineered a scalable <strong>Apache Iceberg data lakehouse</strong> with ACID compliance, time-travel, and schema evolution — enabling versioned, consistent datasets for downstream ML model training.</li>
-          <li>Collaborated with Applied Scientists to design <strong>feature pipelines feeding financial forecasting models</strong>, ensuring low-latency data access and training/inference consistency.</li>
+      <div class="exp-timeline">
+        <div class="exp-dot"></div>
+        <div class="exp-line"></div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-role">Data Engineer</div>
+        <div class="exp-type">AWS FinTech · Full-time</div>
+        <ul class="exp-bullets">
+          <li><strong>Architected a greenfield AWS-native finance platform</strong> now used as the primary strategic decision-making tool for Amazon Finance Leadership, processing petabyte-scale financial datasets.</li>
+          <li>Designed and built a <strong>dynamic Apache Airflow orchestration framework</strong> using JSON-driven DAG generation, reducing pipeline development time by ~40% across the team.</li>
+          <li>Led migration of <strong>20+ critical financial processes</strong> from legacy TM1 to AWS, implementing parallel validation layers ensuring zero data loss across 5+ years of historical data.</li>
+          <li>Achieved <strong>90%+ reduction in processing time</strong> (days → hours) by re-architecting batch jobs with AWS Glue, EMR Serverless, and optimized PySpark execution plans.</li>
+          <li>Engineered a scalable <strong>data lakehouse on Apache Iceberg</strong> with ACID compliance, time-travel querying, and schema evolution — enabling downstream ML teams to train on consistent, versioned datasets.</li>
+          <li>Collaborated with Applied Scientists to <strong>design data pipelines feeding forecasting models</strong>, ensuring feature consistency and low-latency access for model inference.</li>
         </ul>
-        <div class="tl-tags">
-          <span class="tl-tag">AWS Glue</span><span class="tl-tag">EMR Serverless</span>
-          <span class="tl-tag">Apache Iceberg</span><span class="tl-tag">Airflow</span>
-          <span class="tl-tag">PySpark</span><span class="tl-tag">Redshift</span>
+        <div class="exp-tags">
+          <span class="exp-tag">AWS Glue</span><span class="exp-tag">EMR Serverless</span>
+          <span class="exp-tag">Apache Iceberg</span><span class="exp-tag">Airflow</span>
+          <span class="exp-tag">PySpark</span><span class="exp-tag">Redshift</span>
+          <span class="exp-tag">ML Infra</span>
         </div>
       </div>
     </div>
 
-    <div class="tl-item">
-      <div class="tl-meta">
-        <div class="tl-company">Driven By Data</div>
-        <div class="tl-period">Feb 2024<br>Aug 2024</div>
-        <div class="tl-loc">Barcelona, ES</div>
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-company">Driven By Data</div>
+        <div class="exp-period">Feb 2024<br>Aug 2024</div>
+        <div class="exp-loc">Barcelona, ES</div>
       </div>
-      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
-      <div class="tl-body">
-        <div class="tl-role">Data Engineer</div>
-        <div class="tl-type">Consulting · Client: Mapfre Insurance</div>
-        <ul class="tl-bullets">
-          <li>Designed an end-to-end <strong>AWS analytics platform for Mapfre</strong> integrating MWAA, Snowflake, and multi-tier S3 storage, processing 500GB+ of daily insurance event data.</li>
-          <li>Implemented S3 Glacier intelligent tiering, <strong>reducing long-term storage costs by 70%</strong> while preserving sub-second hot-tier access.</li>
-          <li>Developed Snowflake workflows (window functions, CTEs, UDFs) for <strong>complex time-series analysis of insurance claims</strong> and churn risk signals.</li>
-          <li>Engineered <strong>feature extraction pipelines</strong> producing structured datasets for downstream risk-scoring and anomaly detection models.</li>
+      <div class="exp-timeline">
+        <div class="exp-dot"></div>
+        <div class="exp-line"></div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-role">Data Engineer</div>
+        <div class="exp-type">Consulting · Client: Mapfre Insurance</div>
+        <ul class="exp-bullets">
+          <li>Designed an <strong>end-to-end AWS analytics platform for Mapfre</strong>, integrating MWAA, Snowflake, and multi-tier S3 storage serving 500GB+ of daily insurance event data.</li>
+          <li>Implemented an <strong>S3 Glacier intelligent tiering lifecycle policy</strong>, reducing long-term cold storage costs by 70% while maintaining sub-second hot-tier query access.</li>
+          <li>Developed <strong>advanced Snowflake analytical workflows</strong> using window functions, CTEs, and custom UDFs for complex time-series analysis of insurance claims and churn risk signals.</li>
+          <li>Engineered <strong>feature extraction pipelines</strong> producing structured datasets consumed by downstream risk-scoring and anomaly detection models.</li>
         </ul>
-        <div class="tl-tags">
-          <span class="tl-tag">Snowflake</span><span class="tl-tag">MWAA</span>
-          <span class="tl-tag">S3</span><span class="tl-tag">SQL</span>
-          <span class="tl-tag">Feature Engineering</span>
+        <div class="exp-tags">
+          <span class="exp-tag">Snowflake</span><span class="exp-tag">MWAA</span>
+          <span class="exp-tag">S3 Glacier</span><span class="exp-tag">SQL</span>
+          <span class="exp-tag">Feature Engineering</span>
         </div>
       </div>
     </div>
 
-    <div class="tl-item">
-      <div class="tl-meta">
-        <div class="tl-company">Amazon</div>
-        <div class="tl-period">May 2023<br>Aug 2023</div>
-        <div class="tl-loc">Seattle, WA</div>
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-company">Amazon</div>
+        <div class="exp-period">May 2023<br>Aug 2023</div>
+        <div class="exp-loc">Seattle, WA</div>
       </div>
-      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
-      <div class="tl-body">
-        <div class="tl-role">Data Engineer Intern</div>
-        <div class="tl-type">Amazon.com · Data Quality & Reliability</div>
-        <ul class="tl-bullets">
-          <li>Built a production-grade <strong>automated monitoring system with statistical anomaly detection</strong> (Z-score, CUSUM) on Redshift and PySpark, reducing incident response time by 60%.</li>
-          <li>Authored <strong>PySpark transformation jobs</strong> for large-scale data quality validation across multi-terabyte datasets in the data lake.</li>
-          <li>Built <strong>QuickSight operational dashboards</strong> enabling on-call engineers to triage data incidents 3× faster.</li>
-          <li>Worked alongside Applied Scientists to align monitoring thresholds with <strong>statistical quality control methodologies</strong>.</li>
+      <div class="exp-timeline">
+        <div class="exp-dot"></div>
+        <div class="exp-line"></div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-role">Data Engineer Intern</div>
+        <div class="exp-type">Amazon.com · Data Quality & Reliability</div>
+        <ul class="exp-bullets">
+          <li>Built a <strong>production-grade automated monitoring system</strong> using statistical anomaly detection models (Z-score, CUSUM) backed by Redshift and PySpark, cutting incident response time by 60%.</li>
+          <li>Authored <strong>PySpark transformation jobs</strong> for large-scale data cleansing and quality validation across multi-terabyte datasets in the data lake.</li>
+          <li>Developed <strong>operational QuickSight dashboards</strong> enabling on-call engineers to diagnose and triage data quality incidents 3× faster.</li>
+          <li>Worked alongside senior engineers and Applied Scientists to align monitoring thresholds with <strong>statistical quality control methodologies</strong>.</li>
         </ul>
-        <div class="tl-tags">
-          <span class="tl-tag">Redshift</span><span class="tl-tag">PySpark</span>
-          <span class="tl-tag">Anomaly Detection</span><span class="tl-tag">QuickSight</span>
+        <div class="exp-tags">
+          <span class="exp-tag">Redshift</span><span class="exp-tag">PySpark</span>
+          <span class="exp-tag">Anomaly Detection</span><span class="exp-tag">QuickSight</span>
         </div>
       </div>
     </div>
 
-    <div class="tl-item">
-      <div class="tl-meta">
-        <div class="tl-company">Accenture</div>
-        <div class="tl-period">Jan 2021<br>Aug 2022</div>
-        <div class="tl-loc">Barcelona, ES</div>
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-company">Accenture</div>
+        <div class="exp-period">Jan 2021<br>Aug 2022</div>
+        <div class="exp-loc">Barcelona, ES</div>
       </div>
-      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
-      <div class="tl-body">
-        <div class="tl-role">Data Scientist / ML Engineer</div>
-        <div class="tl-type">Accenture · Client: Bayer AG</div>
-        <ul class="tl-bullets">
-          <li>Worked on Bayer's proprietary EU supply chain dataset to build <strong>ensemble demand forecasting models (XGBoost, Random Forest)</strong> for the pharmaceutical distribution network.</li>
-          <li>Ran systematic <strong>hyperparameter tuning via Bayesian optimization</strong>, improving forecast MAPE by 18% over baseline across Bayer's EU network.</li>
+      <div class="exp-timeline">
+        <div class="exp-dot"></div>
+        <div class="exp-line"></div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-role">Data Scientist / ML Engineer</div>
+        <div class="exp-type">Accenture · Client: Bayer AG</div>
+        <ul class="exp-bullets">
+          <li>Worked directly on <strong>Bayer's proprietary European supply chain dataset</strong> to build ensemble demand forecasting models, collaborating with domain experts to validate business logic.</li>
+          <li>Ran <strong>systematic hyperparameter tuning experiments</strong> (grid search + Bayesian optimization) on XGBoost and Random Forest models, improving forecast MAPE by 18% over baseline.</li>
           <li>Engineered <strong>temporal feature extraction pipelines</strong> capturing seasonality, lag structures, and rolling statistics from multi-year pharmaceutical sales records.</li>
-          <li>Designed model evaluation with <strong>walk-forward cross-validation</strong> to prevent data leakage across time-series train/test splits.</li>
+          <li>Designed <strong>model evaluation frameworks</strong> with walk-forward cross-validation tailored to time-series, preventing data leakage across train/test splits.</li>
         </ul>
-        <div class="tl-tags">
-          <span class="tl-tag">XGBoost</span><span class="tl-tag">Random Forest</span>
-          <span class="tl-tag">Scikit-learn</span><span class="tl-tag">Time-Series</span>
-          <span class="tl-tag">Feature Engineering</span><span class="tl-tag">Python</span>
+        <div class="exp-tags">
+          <span class="exp-tag">XGBoost</span><span class="exp-tag">Random Forest</span>
+          <span class="exp-tag">Time-Series</span><span class="exp-tag">Scikit-learn</span>
+          <span class="exp-tag">Feature Engineering</span><span class="exp-tag">Python</span>
         </div>
       </div>
     </div>
 
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-eyebrow"><span>Independent Research</span></div>
+  <h2>Quantitative ML Projects</h2>
+
+  <div class="proj-grid">
+    <div class="proj-card reveal">
+      <div class="proj-left">
+        <div class="proj-category">Volatility Forecasting · Deep Learning · Options Pricing</div>
+        <div class="proj-title">VolSurface — Deep Learning Volatility Forecaster</div>
+        <div class="proj-subtitle">Hybrid GARCH-LSTM pipeline for SPY realized vol forecasting + live implied volatility surface from options chain data</div>
+        <ul class="proj-bullets">
+          <li>Built a <strong>4-stage quantitative pipeline</strong>: realized vol computation → GARCH(1,1) baseline → 2-layer PyTorch LSTM → live implied vol surface, trained on 15 years of SPY data (3,731 trading days).</li>
+          <li>LSTM achieved <strong>RMSE 1.32% vs GARCH 3.33%</strong> — a 60% improvement on the out-of-sample test period (2023–2026), including the unseen April 2025 tariff volatility spike.</li>
+          <li>Implemented a <strong>Newton-Raphson Black-Scholes IV solver</strong> on live SPY options chain data, interpolated via RBF onto an interactive 3D Plotly surface revealing the volatility skew and inverted term structure.</li>
+          <li>Engineered strict <strong>walk-forward train/test splits, MinMaxScaler fitted on train only</strong>, and 60-day sliding window sequences — no data leakage.</li>
+        </ul>
+        <div class="proj-tags">
+          <span class="proj-tag">PyTorch</span>
+          <span class="proj-tag">GARCH</span>
+          <span class="proj-tag">LSTM</span>
+          <span class="proj-tag">Black-Scholes</span>
+          <span class="proj-tag">yfinance</span>
+          <span class="proj-tag">scipy</span>
+          <span class="proj-tag">Plotly</span>
+        </div>
+      </div>
+      <div class="proj-right">
+        <div class="proj-metric">
+          <div class="proj-metric-val">60%</div>
+          <div class="proj-metric-label">RMSE IMPROVEMENT<br>vs GARCH baseline</div>
+        </div>
+        <div class="proj-metric">
+          <div class="proj-metric-val">1.32%</div>
+          <div class="proj-metric-label">LSTM RMSE<br>out-of-sample</div>
+        </div>
+        <a href="https://github.com/ferranvf/volsurface" class="proj-link" target="_blank">↗ GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOCUS AREAS -->
+<section id="focus">
+  <div class="section-eyebrow"><span>Technical Depth</span></div>
+  <h2>Areas of Focus</h2>
+
+  <div class="focus-grid">
+    <div class="focus-card reveal">
+      <div class="focus-card-num">01</div>
+      <div class="focus-card-title">ML Infrastructure & MLOps</div>
+      <p class="focus-card-desc">
+        Designing the data pipelines, feature stores, and model serving infrastructure that close the gap between research and production. Focus on reproducibility, versioning, and low-latency inference at scale.
+      </p>
+      <div class="focus-techs">
+        <span class="focus-tech">Apache Iceberg</span>
+        <span class="focus-tech">Airflow</span>
+        <span class="focus-tech">EMR Serverless</span>
+        <span class="focus-tech">AWS Glue</span>
+        <span class="focus-tech">Feature Stores</span>
+      </div>
+    </div>
+    <div class="focus-card reveal">
+      <div class="focus-card-num">02</div>
+      <div class="focus-card-title">Deep Learning & Neural Architectures</div>
+      <p class="focus-card-desc">
+        Building and training deep learning models for time-series forecasting, tabular data, and sequence modelling. Interested in transformer architectures applied to structured financial and industrial data.
+      </p>
+      <div class="focus-techs">
+        <span class="focus-tech">PyTorch</span>
+        <span class="focus-tech">Transformers</span>
+        <span class="focus-tech">Time-Series DL</span>
+        <span class="focus-tech">Hyperparameter Optimization</span>
+      </div>
+    </div>
+    <div class="focus-card reveal">
+      <div class="focus-card-num">03</div>
+      <div class="focus-card-title">Distributed Data Systems</div>
+      <p class="focus-card-desc">
+        Architecting cloud-native data lakehouses and real-time streaming systems that are cost-efficient, ACID-compliant, and built for machine learning workloads from day one.
+      </p>
+      <div class="focus-techs">
+        <span class="focus-tech">PySpark</span>
+        <span class="focus-tech">Kafka</span>
+        <span class="focus-tech">Snowflake</span>
+        <span class="focus-tech">Redshift</span>
+        <span class="focus-tech">Data Lakehouse</span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -616,41 +1053,103 @@
   <div class="section-eyebrow"><span>Technical Skills</span></div>
   <h2>Stack</h2>
 
-  <div class="skills-grid reveal">
-    <div class="skill-card">
-      <div class="skill-card-title">Languages</div>
-      <div class="skill-list">
-        <span>Python</span> · <span>SQL</span> · <span>PySpark</span> · <span>Scala</span> · R · JavaScript
+  <div class="skills-wrap reveal">
+    <div class="skill-category">
+      <div class="skill-cat-label">Machine Learning & Deep Learning</div>
+      <div class="skill-rows">
+        <div class="skill-row">
+          <span class="skill-name">PyTorch / DL</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div>
+          <span class="skill-level">82%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">XGBoost / Ensembles</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+          <span class="skill-level">90%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Scikit-learn</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div>
+          <span class="skill-level">88%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Time-Series Modeling</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+          <span class="skill-level">85%</span>
+        </div>
       </div>
     </div>
-    <div class="skill-card">
-      <div class="skill-card-title">ML & Deep Learning</div>
-      <div class="skill-list">
-        <span>PyTorch</span> · <span>XGBoost</span> · <span>Scikit-learn</span> · Random Forest · Time-Series Forecasting · Anomaly Detection
+
+    <div class="skill-category">
+      <div class="skill-cat-label">Data Engineering & Cloud</div>
+      <div class="skill-rows">
+        <div class="skill-row">
+          <span class="skill-name">PySpark / Spark</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:92%"></div></div>
+          <span class="skill-level">92%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">AWS (Glue, EMR, S3)</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+          <span class="skill-level">90%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Apache Airflow</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div>
+          <span class="skill-level">88%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Apache Iceberg</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+          <span class="skill-level">85%</span>
+        </div>
       </div>
     </div>
-    <div class="skill-card">
-      <div class="skill-card-title">Data Engineering</div>
-      <div class="skill-list">
-        <span>Apache Airflow</span> · <span>Apache Iceberg</span> · <span>Kafka</span> · <span>Snowflake</span> · AWS Glue · EMR Serverless · MWAA
+
+    <div class="skill-category">
+      <div class="skill-cat-label">Languages</div>
+      <div class="skill-rows">
+        <div class="skill-row">
+          <span class="skill-name">Python</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div>
+          <span class="skill-level">95%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">SQL</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:93%"></div></div>
+          <span class="skill-level">93%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Scala</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:65%"></div></div>
+          <span class="skill-level">65%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">R</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:60%"></div></div>
+          <span class="skill-level">60%</span>
+        </div>
       </div>
     </div>
-    <div class="skill-card">
-      <div class="skill-card-title">Cloud & Infrastructure</div>
-      <div class="skill-list">
-        <span>AWS</span> (S3, Redshift, Glue, EMR, QuickSight) · <span>Docker</span> · CI/CD
-      </div>
-    </div>
-    <div class="skill-card">
-      <div class="skill-card-title">Databases & Warehouses</div>
-      <div class="skill-list">
-        <span>Snowflake</span> · <span>Redshift</span> · <span>Apache Iceberg</span> · Kafka
-      </div>
-    </div>
-    <div class="skill-card">
-      <div class="skill-card-title">Visualization</div>
-      <div class="skill-list">
-        <span>Tableau</span> · <span>Amazon QuickSight</span> · <span>Grafana</span> · Plotly
+
+    <div class="skill-category">
+      <div class="skill-cat-label">Databases & Warehouses</div>
+      <div class="skill-rows">
+        <div class="skill-row">
+          <span class="skill-name">Snowflake</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div>
+          <span class="skill-level">88%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Redshift</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+          <span class="skill-level">85%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Kafka</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div>
+          <span class="skill-level">70%</span>
+        </div>
       </div>
     </div>
   </div>
@@ -660,21 +1159,20 @@
 <section id="education">
   <div class="section-eyebrow"><span>Academic Background</span></div>
   <h2>Education</h2>
-
-  <div class="edu-grid reveal">
-    <div class="edu-card">
+  <div class="edu-row">
+    <div class="edu-card reveal">
       <div class="edu-degree">M.S. Artificial Intelligence</div>
       <div class="edu-school">University of the Cumberlands, KY</div>
       <div class="edu-year">2024 – 2025</div>
       <div class="edu-gpa">⬡ GPA 3.81 / 4.0</div>
     </div>
-    <div class="edu-card">
+    <div class="edu-card reveal">
       <div class="edu-degree">M.S. Computational Data Science</div>
       <div class="edu-school">Temple University, PA</div>
       <div class="edu-year">2022 – 2023</div>
       <div class="edu-gpa">⬡ GPA 3.60 / 4.0</div>
     </div>
-    <div class="edu-card">
+    <div class="edu-card reveal">
       <div class="edu-degree">B.S. Data Engineering</div>
       <div class="edu-school">Universitat Autònoma de Barcelona</div>
       <div class="edu-year">2018 – 2022</div>
@@ -687,7 +1185,7 @@
 <footer id="contact">
   <div>
     <div class="footer-name">Ferran Vera Filella</div>
-    <div class="footer-tagline">Data Engineer · AI & Machine Learning · Seattle, WA</div>
+    <div class="footer-tagline">ML Infra · Deep Learning · Data Engineering · Seattle, WA</div>
   </div>
   <div class="footer-links">
     <a href="mailto:ferran.vera.filella@gmail.com" class="footer-link">
@@ -695,6 +1193,9 @@
     </a>
     <a href="https://www.linkedin.com/in/ferran-vera-filella" class="footer-link" target="_blank">
       <span class="footer-dot"></span> linkedin.com/in/ferran-vera-filella
+    </a>
+    <a href="https://github.com/ferranvf" class="footer-link" target="_blank">
+      <span class="footer-dot"></span> github.com/ferranvf
     </a>
   </div>
   <div class="footer-aside">
